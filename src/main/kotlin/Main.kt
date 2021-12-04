@@ -96,22 +96,26 @@ tailrec fun scrubberRating(input: String, index: Int = 0): Int {
     return filtered.singleOrNull()?.toInt(2) ?: scrubberRating(filtered.joinToString("\n"), index + 1)
 }
 
-//typealias Card = D2Array<Int>
-//fun Card.solve(draws: List<Int>): List<Int> {
-//    for (row in 0..4) {
-//        if (drawn.intersect(card.value[row].toSet()).size == 5) {
-//            winningCardIndex = card.index
-//            break@draw
-//        }
-//    }
-//
-//    for (col in 0..4) {
-//        if (drawn.intersect(card.value[0..5, col].toSet()).size == 5) {
-//            winningCardIndex = card.index
-//            break@draw
-//        }
-//    }
-//}
+typealias Card = D2Array<Int>
+fun Card.drawnToSolve(draws: List<Int>): Set<Int> {
+    val drawn = mutableSetOf<Int>()
+    draw@ for (number in draws) {
+        drawn.add(number)
+
+        for (row in 0..4) {
+            if (drawn.intersect(this[row].toSet()).size == 5) {
+                break@draw
+            }
+        }
+
+        for (col in 0..4) {
+            if (drawn.intersect(this[0..5, col].toSet()).size == 5) {
+                break@draw
+            }
+        }
+    }
+    return drawn
+}
 
 fun day4part1(input: String): Int {
     val draws = input.lines()
@@ -119,38 +123,15 @@ fun day4part1(input: String): Int {
         .split(",")
         .map(String::toInt)
 
-    val cards = input.lines()
+    val card = input.lines()
         .drop(1)
         .flatMap { it.split("""\s+""".toRegex()) }
         .mapNotNull(String::toIntOrNull)
         .chunked(25) { mk.ndarray(it, 5, 5) }
+        .map { it to it.drawnToSolve(draws) }
+        .minByOrNull { it.second.size }!!
 
-    val drawn = mutableSetOf<Int>()
-    var winningCardIndex: Int = -1
-
-    draw@ for (number in draws) {
-        drawn.add(number)
-
-        for (card in cards.withIndex()) {
-            for (row in 0..4) {
-                if (drawn.intersect(card.value[row].toSet()).size == 5) {
-                    winningCardIndex = card.index
-                    break@draw
-                }
-            }
-
-            for (col in 0..4) {
-                if (drawn.intersect(card.value[0..5, col].toSet()).size == 5) {
-                    winningCardIndex = card.index
-                    break@draw
-                }
-            }
-        }
-    }
-
-    val sumUnchecked = cards[winningCardIndex].toSet().subtract(drawn).sum()
-
-    return sumUnchecked * drawn.last()
+    return card.first.toSet().subtract(card.second).sum() * card.second.last()
 }
 
 fun day4part2(input: String): Int {
@@ -159,38 +140,15 @@ fun day4part2(input: String): Int {
         .split(",")
         .map(String::toInt)
 
-    val cards = input.lines()
+    val card = input.lines()
         .drop(1)
         .flatMap { it.split("""\s+""".toRegex()) }
         .mapNotNull(String::toIntOrNull)
         .chunked(25) { mk.ndarray(it, 5, 5) }
+        .map { it to it.drawnToSolve(draws) }
+        .maxByOrNull { it.second.size }!!
 
-    val drawn = mutableSetOf<Int>()
-    val winningCardIndexes = mutableListOf<Int>()
-
-    for (number in draws) {
-        drawn.add(number)
-
-        for (card in cards.withIndex()) {
-            for (row in 0..4) {
-                if (drawn.intersect(card.value[row].toSet()).size == 5) {
-                    if (card.index !in winningCardIndexes) winningCardIndexes.add(card.index)
-                }
-            }
-
-            for (col in 0..4) {
-                if (drawn.intersect(card.value[0..5, col].toSet()).size == 5) {
-                    if (card.index !in winningCardIndexes) winningCardIndexes.add(card.index)
-                }
-            }
-        }
-
-        if (cards.size == winningCardIndexes.size) break
-    }
-
-    val sumUnchecked = cards[winningCardIndexes.last()].toSet().subtract(drawn).sum()
-
-    return sumUnchecked * drawn.last()
+    return card.first.toSet().subtract(card.second).sum() * card.second.last()
 }
 
 fun day5part1(input: String): Int {
