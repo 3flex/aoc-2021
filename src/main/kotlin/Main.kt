@@ -7,12 +7,13 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 fun main() {
-    println(day5part1(getInput(5)))
-    println(day5part2(getInput(5)))
+    println(Main.day5part1(getInput(5)))
+    println(Main.day5part2(getInput(5)))
 }
 
 fun getInput(day: Int) = Path("inputs/day$day.txt").readText()
 
+object Main {
 fun day1part1(input: String) =
     input.lines()
         .map(String::toInt)
@@ -95,7 +96,6 @@ tailrec fun scrubberRating(input: String, index: Int = 0): Int {
     return filtered.singleOrNull()?.toInt(2) ?: scrubberRating(filtered.joinToString("\n"), index + 1)
 }
 
-typealias Card = D2Array<Int>
 fun Card.drawnToSolve(draws: List<Int>): Set<Int> {
     val drawn = mutableSetOf<Int>()
     draw@ for (number in draws) {
@@ -157,3 +157,7 @@ fun day5part1(input: String): Int {
 fun day5part2(input: String): Int {
     return 0
 }
+
+}
+
+typealias Card = D2Array<Int>

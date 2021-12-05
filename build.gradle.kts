@@ -15,6 +15,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:multik-default:0.1.1")
 
     testImplementation(kotlin("test"))
+    testImplementation(kotlin("reflect"))
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
 
 tasks.test {
