@@ -186,7 +186,74 @@ object Main {
     }
 
     fun day5part2(input: String): Int {
-        return 0
+        val board = mk.zeros<Int>(1000,1000)
+
+        // straight lines
+        input.lines()
+            .map {
+                val (x1, y1, x2, y2) = Regex("""(\d+),(\d+) -> (\d+),(\d+)""").matchEntire(it)!!.destructured
+                Line(x1.toInt(), y1.toInt(), x2.toInt(), y2.toInt())
+            }
+            .filter { (it.x1 == it.x2 || it.y1 == it.y2) } // vertical or horizontal
+            .forEach {
+                if (it.x1 == it.x2) { // is vertical
+                    for (i in it.y1..it.y2) {
+                        board[it.x1, i] = board[it.x1, i] + 1
+                    }
+                    for (i in it.y2..it.y1) {
+                        board[it.x1, i] = board[it.x1, i] + 1
+                    }
+                } else { // is horizontal
+                    for (i in it.x1..it.x2) {
+                        board[i, it.y1] = board[i, it.y1] + 1
+                    }
+                    for (i in it.x2..it.x1) {
+                        board[i, it.y1] = board[i, it.y1] + 1
+                    }
+                }
+            }
+
+        // diagonal lines
+        input.lines()
+            .map {
+                val (x1, y1, x2, y2) = Regex("""(\d+),(\d+) -> (\d+),(\d+)""").matchEntire(it)!!.destructured
+                Line(x1.toInt(), y1.toInt(), x2.toInt(), y2.toInt())
+            }
+            .filterNot { (it.x1 == it.x2 || it.y1 == it.y2) } // diagonal lines
+            .forEach {
+                when {
+                    it.x1 < it.x2 && it.y1 < it.y2 -> {
+                        var y = it.y1
+                        for (x in it.x1..it.x2) {
+                            board[x, y] = board[x, y] + 1
+                            y++
+                        }
+                    }
+                    it.x1 < it.x2 && it.y1 > it.y2 -> {
+                        var y = it.y1
+                        for (x in it.x1..it.x2) {
+                            board[x, y] = board[x, y] + 1
+                            y--
+                        }
+                    }
+                    it.x1 > it.x2 && it.y1 < it.y2 -> {
+                        var y = it.y1
+                        for (x in it.x1 downTo it.x2) {
+                            board[x, y] = board[x, y] + 1
+                            y++
+                        }
+                    }
+                    it.x1 > it.x2 && it.y1 > it.y2 -> {
+                        var y = it.y1
+                        for (x in it.x1 downTo it.x2) {
+                            board[x, y] = board[x, y] + 1
+                            y--
+                        }
+                    }
+                }
+            }
+
+        return board.toList().count { it >= 2 }
     }
 
     fun day6part1(input: String): Int {
