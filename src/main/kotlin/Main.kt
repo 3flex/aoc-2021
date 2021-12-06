@@ -10,8 +10,8 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 fun main() {
-    println(Main.day5part1(getInput(5)))
-    println(Main.day5part2(getInput(5)))
+    println(Main.day7part1(getInput(7)))
+    println(Main.day7part2(getInput(7)))
 }
 
 fun getInput(day: Int) = Path("inputs/day$day.txt").readText()
@@ -306,6 +306,14 @@ object Main {
         }
 
         return fish.sum()
+    }
+
+    fun day7part1(input: String): Int {
+        return 0
+    }
+
+    fun day7part2(input: String): Int {
+        return 0
     }
 }
 
