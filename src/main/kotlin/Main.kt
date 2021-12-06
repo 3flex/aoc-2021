@@ -1,7 +1,10 @@
 import org.jetbrains.kotlinx.multik.api.mk
 import org.jetbrains.kotlinx.multik.api.ndarray
+import org.jetbrains.kotlinx.multik.api.zeros
 import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
 import org.jetbrains.kotlinx.multik.ndarray.data.get
+import org.jetbrains.kotlinx.multik.ndarray.data.set
+import org.jetbrains.kotlinx.multik.ndarray.operations.toList
 import org.jetbrains.kotlinx.multik.ndarray.operations.toSet
 import kotlin.io.path.Path
 import kotlin.io.path.readText
@@ -150,8 +153,36 @@ object Main {
         return card.first.toSet().subtract(card.second).sum() * card.second.last()
     }
 
+    data class Line(val x1: Int, val y1: Int, val x2: Int, val y2: Int)
+
     fun day5part1(input: String): Int {
-        return 0
+        val board = mk.zeros<Int>(1000,1000)
+
+        input.lines()
+            .map {
+                val (x1, y1, x2, y2) = Regex("""(\d+),(\d+) -> (\d+),(\d+)""").matchEntire(it)!!.destructured
+                Line(x1.toInt(), y1.toInt(), x2.toInt(), y2.toInt())
+            }
+            .filter { (it.x1 == it.x2 || it.y1 == it.y2) } // vertical or horizontal
+            .forEach {
+                if (it.x1 == it.x2) { // is vertical
+                    for (i in it.y1..it.y2) {
+                        board[it.x1, i] = board[it.x1, i] + 1
+                    }
+                    for (i in it.y2..it.y1) {
+                        board[it.x1, i] = board[it.x1, i] + 1
+                    }
+                } else { // is horizontal
+                    for (i in it.x1..it.x2) {
+                        board[i, it.y1] = board[i, it.y1] + 1
+                    }
+                    for (i in it.x2..it.x1) {
+                        board[i, it.y1] = board[i, it.y1] + 1
+                    }
+                }
+            }
+
+        return board.toList().count { it >= 2 }
     }
 
     fun day5part2(input: String): Int {
