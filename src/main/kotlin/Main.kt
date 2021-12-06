@@ -256,27 +256,29 @@ object Main {
         return board.toList().count { it >= 2 }
     }
 
-    fun day6part1(input: String): Int {
+    fun newFish(input: LongArray) = longArrayOf(
+        input[1],
+        input[2],
+        input[3],
+        input[4],
+        input[5],
+        input[6],
+        input[0] + input[7],
+        input[8],
+        input[0],
+    )
+
+    fun day6part1(input: String): Long {
         var fish = input
             .split(",")
             .map(String::toInt)
-            .fold(IntArray(9)) {acc, i ->
+            .fold(LongArray(9)) {acc, i ->
                 acc[i] = acc[i] + 1
                 acc
             }
 
         repeat(80) {
-            val newFish = IntArray(9)
-            newFish[0] = fish[1]
-            newFish[1] = fish[2]
-            newFish[2] = fish[3]
-            newFish[3] = fish[4]
-            newFish[4] = fish[5]
-            newFish[5] = fish[6]
-            newFish[6] = fish[0] + fish[7]
-            newFish[7] = fish[8]
-            newFish[8] = fish[0]
-            fish = newFish.clone()
+            fish = newFish(fish)
         }
 
         return fish.sum()
@@ -292,17 +294,7 @@ object Main {
             }
 
         repeat(256) {
-            val newFish = LongArray(9)
-            newFish[0] = fish[1]
-            newFish[1] = fish[2]
-            newFish[2] = fish[3]
-            newFish[3] = fish[4]
-            newFish[4] = fish[5]
-            newFish[5] = fish[6]
-            newFish[6] = fish[0] + fish[7]
-            newFish[7] = fish[8]
-            newFish[8] = fish[0]
-            fish = newFish.clone()
+            fish = newFish(fish)
         }
 
         return fish.sum()
