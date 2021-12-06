@@ -277,7 +277,6 @@ object Main {
             newFish[7] = fish[8]
             newFish[8] = fish[0]
             fish = newFish.clone()
-            println(fish.joinToString())
         }
 
         return fish.sum()
