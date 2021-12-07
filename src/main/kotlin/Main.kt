@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.multik.ndarray.operations.toList
 import org.jetbrains.kotlinx.multik.ndarray.operations.toSet
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.abs
 
 fun main() {
     println(Main.day7part1(getInput(7)))
@@ -301,17 +302,12 @@ object Main {
     }
 
     fun day7part1(input: String): Int {
-        val crabs = input.split(",").map(String::toInt).sorted().toIntArray()
+        val crabs = input.split(",").map(String::toInt)
 
         var result: Int = Integer.MAX_VALUE
 
         for (steps in crabs.minOrNull()!!..crabs.maxOrNull()!!) {
-            val fuelUsed = crabs.sumOf {
-                when {
-                    steps < it -> it - steps
-                    else -> steps - it
-                }
-            }
+            val fuelUsed = crabs.sumOf { abs(it - steps) }
             if (fuelUsed < result) result = fuelUsed
         }
 
