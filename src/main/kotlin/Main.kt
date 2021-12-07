@@ -11,8 +11,8 @@ import kotlin.io.path.readText
 import kotlin.math.abs
 
 fun main() {
-    println(Main.day7part1(getInput(7)))
-    println(Main.day7part2(getInput(7)))
+    println(Main.day8part1(getInput(8)))
+    println(Main.day8part2(getInput(8)))
 }
 
 fun getInput(day: Int) = Path("inputs/day$day.txt").readText()
@@ -328,6 +328,14 @@ object Main {
         }
 
         return result
+    }
+
+    fun day8part1(input: String): Int {
+        return 0
+    }
+
+    fun day8part2(input: String): Int {
+        return 0
     }
 }
 
