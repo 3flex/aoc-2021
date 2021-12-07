@@ -301,7 +301,21 @@ object Main {
     }
 
     fun day7part1(input: String): Int {
-        return 0
+        val crabs = input.split(",").map(String::toInt).sorted().toIntArray()
+
+        var result: Int = Integer.MAX_VALUE
+
+        for (steps in crabs.minOrNull()!!..crabs.maxOrNull()!!) {
+            val fuelUsed = crabs.sumOf {
+                when {
+                    steps < it -> it - steps
+                    else -> steps - it
+                }
+            }
+            if (fuelUsed < result) result = fuelUsed
+        }
+
+        return result
     }
 
     fun day7part2(input: String): Int {

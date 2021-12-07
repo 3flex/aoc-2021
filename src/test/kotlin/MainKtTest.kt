@@ -19,8 +19,8 @@ internal class MainKtTest {
 5, 2, 12
 6, 1, 5934
 6, 2, 26984457539
-7, 1, 
-7, 2, 
+7, 1, 37
+7, 2, 168
 """)
     @ParameterizedTest(name = "{0}, {1}")
     fun sampleTests(day: Int, part: Int, sample: String?) {
@@ -46,6 +46,7 @@ internal class MainKtTest {
 5, 2, 21104
 6, 1, 359344
 6, 2, 1629570219571
+7, 1, 347509
 """)
     @ParameterizedTest(name = "{0}, {1}")
     fun realTests(day: Int, part: Int, real: String?) {
