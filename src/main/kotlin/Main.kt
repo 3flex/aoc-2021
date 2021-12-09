@@ -330,9 +330,10 @@ object Main {
         return result
     }
 
-    fun day8part1(input: String): Int {
-        return 0
-    }
+    fun day8part1(input: String) =
+        input.lines()
+            .map { it.substringAfter('|').split(' ') }
+            .sumOf { it.count { it.length in setOf(2, 3, 4, 7) } }
 
     fun day8part2(input: String): Int {
         return 0
