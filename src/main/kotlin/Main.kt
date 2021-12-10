@@ -336,7 +336,96 @@ object Main {
             .sumOf { it.count { it.length in setOf(2, 3, 4, 7) } }
 
     fun day8part2(input: String): Int {
-        return 0
+        var realOutput = 0
+        input.lines().forEach { segment ->
+            val patterns = segment.substringBefore('|').trim().split(' ').map { it.toSet() }
+            val output = segment.substringAfter('|').trim().split(' ')
+            val candidates = buildMap {
+                ('a'..'g').forEach { this[it] = ('a'..'g').toMutableSet() }
+            }
+
+            patterns.forEach {
+                when (it.size) {
+                    2 -> { // number 1
+                        candidates.get('a')!!.removeAll(it)
+                        candidates.get('b')!!.removeAll(it)
+                        candidates.get('c')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('d')!!.removeAll(it)
+                        candidates.get('e')!!.removeAll(it)
+                        candidates.get('f')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('g')!!.removeAll(it)
+                    }
+                    3 -> { // number 7
+                        candidates.get('a')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('b')!!.removeAll(it)
+                        candidates.get('c')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('d')!!.removeAll(it)
+                        candidates.get('e')!!.removeAll(it)
+                        candidates.get('f')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('g')!!.removeAll(it)
+                    }
+                    4 -> { // number 4
+                        candidates.get('a')!!.removeAll(it)
+                        candidates.get('b')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('c')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('d')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('e')!!.removeAll(it)
+                        candidates.get('f')!!.removeAll(('a'..'g').minus(it))
+                        candidates.get('g')!!.removeAll(it)
+                    }
+                }
+            }
+
+            // get 'c', 'f'
+            if (patterns.filter { it.size == 6 }.count { it.contains(candidates.get('c')!!.first()) } == 2) {
+                candidates.get('c')!!.remove(candidates.get('c')!!.last())
+                candidates.get('f')!!.remove(candidates.get('c')!!.first())
+            } else {
+                candidates.get('c')!!.remove(candidates.get('c')!!.first())
+                candidates.get('f')!!.remove(candidates.get('c')!!.last())
+            }
+
+            // get 'b', 'd'
+            if (patterns.filter { it.size == 6 }.count { it.contains(candidates.get('d')!!.first()) } == 2) {
+                candidates.get('d')!!.remove(candidates.get('d')!!.last())
+                candidates.get('b')!!.remove(candidates.get('d')!!.first())
+            } else {
+                candidates.get('d')!!.remove(candidates.get('d')!!.first())
+                candidates.get('b')!!.remove(candidates.get('d')!!.last())
+            }
+
+            // get 'e', 'g'
+            if (patterns.filter { it.size == 6 }.count { it.contains(candidates.get('e')!!.first()) } == 2) {
+                candidates.get('e')!!.remove(candidates.get('e')!!.last())
+                candidates.get('g')!!.remove(candidates.get('e')!!.first())
+            } else {
+                candidates.get('e')!!.remove(candidates.get('e')!!.first())
+                candidates.get('g')!!.remove(candidates.get('e')!!.last())
+            }
+
+            val outputCodes = output.map {
+                it.map { (candidates.entries.associateBy({ it.value.single() }) { it.key }).get(it)!! }.sorted()
+                    .joinToString("")
+            }
+
+            realOutput += outputCodes.map {
+                when (it.toCharArray().sorted().joinToString("")) {
+                    "abcefg" -> 0
+                    "cf" -> 1
+                    "acdeg" -> 2
+                    "acdfg" -> 3
+                    "bcdf" -> 4
+                    "abdfg" -> 5
+                    "abdefg" -> 6
+                    "acf" -> 7
+                    "abcdefg" -> 8
+                    "abcdfg" -> 9
+                    else -> error(it)
+                }
+            }.joinToString("").toInt()
+        }
+
+        return realOutput
     }
 
     fun day10part1(input: String): Int {
