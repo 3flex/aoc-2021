@@ -338,6 +338,24 @@ object Main {
     fun day8part2(input: String): Int {
         return 0
     }
+
+    fun day10part1(input: String): Int {
+        val lines = input.lines()
+        val tracker = mutableListOf<Char>()
+        val danglers = mutableListOf<Char>()
+        for (line in lines) {
+            for (char in line) {
+                if (char in setOf('(', '[', '{', '<')) tracker.add(char)
+                else if ((tracker.last() == '(' && char == ')') || (tracker.last() == '[' && char == ']') || (tracker.last() == '{' && char == '}') || (tracker.last() == '<' && char == '>')) {
+                    tracker.removeLast()
+                } else {
+                    danglers.add(char)
+                    break
+                }
+            }
+        }
+        return danglers.count { it == ')' } * 3 + danglers.count { it == ']' } * 57 + danglers.count { it == '}' } * 1197 + danglers.count { it == '>' } * 25137
+    }
 }
 
 typealias Card = D2Array<Int>
