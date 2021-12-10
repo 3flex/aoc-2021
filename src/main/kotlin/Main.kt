@@ -356,6 +356,47 @@ object Main {
         }
         return danglers.count { it == ')' } * 3 + danglers.count { it == ']' } * 57 + danglers.count { it == '}' } * 1197 + danglers.count { it == '>' } * 25137
     }
+
+    fun day10part2(input: String): Long {
+        val lines = input.lines()
+        val filteredLines = lines.toMutableList()
+        val tracker = mutableListOf<Char>()
+        for (line in lines) {
+            for (char in line) {
+                if (char in setOf('(', '[', '{', '<')) tracker.add(char)
+                else if ((tracker.last() == '(' && char == ')') || (tracker.last() == '[' && char == ']') || (tracker.last() == '{' && char == '}') || (tracker.last() == '<' && char == '>')) {
+                    tracker.removeLast()
+                } else {
+                    filteredLines.remove(line)
+                    tracker.clear()
+                    break
+                }
+            }
+        }
+
+        val completionStrings = mutableListOf<Long>()
+
+        filteredLines.forEach { line ->
+            tracker.clear()
+            line.forEach { char ->
+                if (char in setOf('(', '[', '{', '<')) tracker.add(char)
+                else if ((tracker.last() == '(' && char == ')') || (tracker.last() == '[' && char == ']') || (tracker.last() == '{' && char == '}') || (tracker.last() == '<' && char == '>')) {
+                    tracker.removeLast()
+                }
+            }
+            completionStrings.add(tracker.joinToString("").reversed().fold(0L) { i, char ->
+                i * 5 + when(char) {
+                    '(' -> 1
+                    '[' -> 2
+                    '{' -> 3
+                    '<' -> 4
+                    else -> error("")
+                }
+            })
+        }
+
+        return completionStrings.sorted().drop(completionStrings.size / 2).first()
+    }
 }
 
 typealias Card = D2Array<Int>
